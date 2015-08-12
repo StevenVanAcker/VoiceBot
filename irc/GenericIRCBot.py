@@ -79,6 +79,7 @@ class GenericIRCBot(irc.IRCClient):
 #}}}
     def signedOn(self): #{{{
         """Called when bot has succesfully signed on to server."""
+        irc.IRCClient.signedOn(self)
 	[self.join(x) for x in self.factory.channels]
 #}}}
     def alterCollidedNick(self, nickname): #{{{
@@ -183,10 +184,11 @@ class GenericIRCBot(irc.IRCClient):
 
 
 class GenericIRCBotFactory(protocol.ClientFactory):
-    def __init__(self, proto, channels, nick): #{{{
+    def __init__(self, proto, channels, nick, password=None): #{{{
         self.protocol = proto
         self.channels = channels
         self.nickname = nick
+        self.password = password
         self.basenickname = nick
 # }}}
     def clientConnectionLost(self, connector, reason): #{{{
@@ -196,4 +198,9 @@ class GenericIRCBotFactory(protocol.ClientFactory):
     def clientConnectionFailed(self, connector, reason): #{{{
         print "connection failed:", reason
         reactor.stop()
+
+    def buildProtocol(self, a):
+        x = protocol.ClientFactory.buildProtocol(self, a)
+        x.password = self.password
+        return x
 #}}}

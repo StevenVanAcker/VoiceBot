@@ -2,7 +2,7 @@
 
 # twisted imports
 from twisted.words.protocols import irc
-from twisted.internet import reactor, protocol
+from twisted.internet import reactor, protocol, ssl
 import urllib2
 from cStringIO import StringIO
 
@@ -15,14 +15,6 @@ from speak import speak
 
 FULLNAME = "VoiceBot v0.1"
 BOTURL = "https://github.com/StevenVanAcker/VoiceBot"
-
-try:
-    import Image
-    import aalib
-    use_aalib = True
-except ImportError:
-    use_aalib = False
-    print "aalib not found on this system..."
 
 class VoiceBot(GenericIRCBot):
     def __init__(self): #{{{
@@ -54,17 +46,17 @@ class VoiceBot(GenericIRCBot):
 #}}}
 
 class VoiceBotFactory(GenericIRCBotFactory):
-    def __init__(self, proto, channel, nick): #{{{
-        GenericIRCBotFactory.__init__(self, proto, channel, nick)
+    def __init__(self, proto, channel, nick, password=None): #{{{
+        GenericIRCBotFactory.__init__(self, proto, channel, nick, password)
 # }}}
 
 
 if __name__ == '__main__':
     # create factory protocol and application
-    f = VoiceBotFactory(VoiceBot, ["#xxx"], "VoiceBot")
+    f = VoiceBotFactory(VoiceBot, ["#xxx"], "VoiceBot", password=None)
 
     # connect factory to this host and port
-    reactor.connectTCP(sys.argv[1] if len(sys.argv) > 1 else "irc.overthewire.org", 6667, f)
+    reactor.connectSSL(sys.argv[1] if len(sys.argv) > 1 else "irc.overthewire.org", 6667, f, ssl.ClientContextFactory())
 
     # run bot
     reactor.run()
