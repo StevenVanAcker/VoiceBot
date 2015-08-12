@@ -52,7 +52,7 @@ def speak(txt=None, cmd="mplayer", defaultfile="/some/fail/file", speaker="rich1
 	    fileToPlay = fn
 	    deleteFile = True
     except Exception,e:
-	print e
+	print "ERROR", e
     	pass
     os.system("%s %s" % (cmd, fileToPlay))
     if deleteFile:
