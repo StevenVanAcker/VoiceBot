@@ -13,8 +13,8 @@ from time import gmtime, strftime
 from irc.GenericIRCBot import GenericIRCBot, GenericIRCBotFactory, log
 from speak import speak
 
-FULLNAME = "VoiceBot v0.0"
-BOTURL = "nowhere"
+FULLNAME = "VoiceBot v0.1"
+BOTURL = "https://github.com/StevenVanAcker/VoiceBot"
 
 try:
     import Image
