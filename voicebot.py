@@ -11,10 +11,11 @@ import sys, os.path, re
 from time import gmtime, strftime
 
 from irc.GenericIRCBot import GenericIRCBot, GenericIRCBotFactory, log
-from speak import speak
+from TextToSpeech import TextToSpeech
 
 FULLNAME = "VoiceBot v0.1"
 BOTURL = "https://github.com/StevenVanAcker/VoiceBot"
+DATAFILE = "/tmp/datafile"
 
 class VoiceBot(GenericIRCBot):
     def __init__(self): #{{{
@@ -39,7 +40,7 @@ class VoiceBot(GenericIRCBot):
     def handle_SAY(self, req): #{{{
         txt = " ".join(req["words"][1:])
         print "Asked to say: %s" % txt
-	speak(txt)
+	TextToSpeech(DATAFILE).add(txt)
 #}}}
     def handle_catchall(self, req): #{{{
     	pass
