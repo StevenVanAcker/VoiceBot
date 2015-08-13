@@ -39,8 +39,13 @@ class VoiceBot(GenericIRCBot):
     #}}}
     def handle_SAY(self, req): #{{{
         txt = " ".join(req["words"][1:])
+	voice = "rich"
+    	if len(req["words"]) > 1 and req["words"][1].startswith("(") and req["words"][1].endswith(")"):
+	    txt = " ".join(req["words"][2:])
+	    voice = req["words"][1][1:-1]
+	     
         print "Asked to say: %s" % txt
-	TextToSpeech(DATAFILE).add(txt)
+	TextToSpeech(DATAFILE).add(txt, speaker="%s16" % voice)
 #}}}
     def handle_catchall(self, req): #{{{
     	pass
