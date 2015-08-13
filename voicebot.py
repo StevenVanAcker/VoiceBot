@@ -59,10 +59,18 @@ class VoiceBotFactory(GenericIRCBotFactory):
 
 if __name__ == '__main__':
     # create factory protocol and application
-    f = VoiceBotFactory(VoiceBot, ["#xxx"], "VoiceBot", password=None)
+    server = sys.argv[1] if len(sys.argv) > 1 else "irc.overthewire.org"
+    port = 6667
+    channels = ["#xxx"]
+    password = None
+    try:
+	from config import *
+    except:
+    	pass
+    f = VoiceBotFactory(VoiceBot, channels, "VoiceBot", password=password)
 
     # connect factory to this host and port
-    reactor.connectSSL(sys.argv[1] if len(sys.argv) > 1 else "irc.overthewire.org", 6667, f, ssl.ClientContextFactory())
+    reactor.connectSSL(server, port, f, ssl.ClientContextFactory())
 
     # run bot
     reactor.run()
