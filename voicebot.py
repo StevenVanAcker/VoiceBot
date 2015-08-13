@@ -12,12 +12,17 @@ from time import gmtime, strftime
 
 from irc.GenericIRCBot import GenericIRCBot, GenericIRCBotFactory, log
 from TextToSpeech import TextToSpeech
+from subprocess import call
 
 FULLNAME = "VoiceBot v0.1"
 BOTURL = "https://github.com/StevenVanAcker/VoiceBot"
 DATAFILE = "/tmp/datafile"
 
 allvoices = "mike crystal claire julia lauren mel ray rich rosa alberto".split(" ")
+
+def queueRebel(url): #{{{
+    call(["./queueRebel.py", url])
+#}}}
 
 class VoiceBot(GenericIRCBot):
     def __init__(self): #{{{
@@ -66,7 +71,9 @@ class VoiceBot(GenericIRCBot):
 	TextToSpeech(DATAFILE).add(txt, speaker="%s16" % voice)
 #}}}
     def handle_catchall(self, req): #{{{
-    	pass
+        for url in [x for x in req["words"] if x.startswith(("http://", "https://"))]:
+	    self.sendReply(req, "Queueing %s" % url)
+	    queueRebel(url)
 #}}}
 
 class VoiceBotFactory(GenericIRCBotFactory):
